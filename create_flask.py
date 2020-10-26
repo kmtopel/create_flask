@@ -1,21 +1,21 @@
-import os
-import sys
+import argparse
 import subprocess
 import venv
 
-project_name = sys.argv[1]
-try:
-    if sys.argv[2]=='bootstrap':
-        bootstrap = True
-except:
-    bootstrap=False
+parser = argparse.ArgumentParser()
+parser.add_argument('project', help='Name of Project', type=str)
+parser.add_argument('--bootstrap', help='Add bootstrap lib', action='store_true')
+args = parser.parse_args()
+project_name = args.project
+
+project_path = './'+project_name
+
 print('Creating project folder...')
-os.mkdir(project_name)
-project_path = os.getcwd()+'/'+project_name
+subprocess.run(['mkdir',project_name])
 print('Creating Templates folder...')
-os.mkdir(project_path+'/templates')
+subprocess.run(['mkdir',project_path+'/templates'])
 print('Creating Static folder...')
-os.mkdir(project_path+'/static')
+subprocess.run(['mkdir',project_path+'/static'])
 
 print('Creating main application .py file...')
 with open(project_path+'/app.py','w+') as app:
@@ -59,7 +59,7 @@ with open(project_path+'/templates/layout.html','w+') as layout:
   </body>
 </html>'''
     print('Writing boilerplate code for layout file...')
-    if bootstrap==True:
+    if args.bootstrap==True:
         layout.write(html_boilerplate_w_bootstrap)
     else:
         layout.write(html_boilerplate)
